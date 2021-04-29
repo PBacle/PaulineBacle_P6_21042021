@@ -1,6 +1,6 @@
 #  OpenClassrooms-Développeur Web 📎 Projet 6 - Construire une API sécurisée pour l'application So Pekocko
 
-👤 &nbsp; **Pauline BACLE** [🇫🇷 Contactez moi 🇬🇧](<bacle-pauline@orage.fr>)
+👤 &nbsp; **Pauline BACLE** [🇫🇷 Contactez moi ](<bacle-pauline@orage.fr>)
 _`Début du projet le 21/04/2021`_
 
 ## Contenu de ce repository
