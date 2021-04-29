@@ -3,12 +3,10 @@
 👤 &nbsp; **Pauline BACLE** [🇫🇷 Contactez moi 🇬🇧](<bacle-pauline@orage.fr>)
 _`Début du projet le 21/04/2021`_
 
-## Instructions 
-
 ## Contenu de ce repository
 
-* Ce repo contient les deux dossiers `frontend` et `backend`.
-* Si besoin, le Frontend est aussi disponible sur [github](https://github.com/OpenClassrooms-Student-Center/dwj-projet6).
+* Ce repository contient les deux dossiers `frontend` et `backend`.
+* Si besoin, le frontend est aussi disponible sur [github](https://github.com/OpenClassrooms-Student-Center/dwj-projet6).
 
 
 ### 🔨 &nbsp; Installation
