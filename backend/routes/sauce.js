@@ -5,9 +5,9 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer_config');
 
 const sauceCtrl = require('../controllers/sauce');
-const {validateBody, validators} = require('../middleware/sauceValidator');
+const {validateBody, validators} = require('../middleware/validator');
 
-router.post('/', auth, multer, validateBody(validators.sauceValidator), sauceCtrl.createSauce);
+router.post('/', auth, multer, validateBody(validators.sauceValidator, 'sauce'), sauceCtrl.createSauce);
 router.put('/:id', auth, multer, sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/:id', auth, sauceCtrl.getOneSauce);

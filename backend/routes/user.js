@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/user');
+const {validateBody, validators} = require('../middleware/validator');
 const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
@@ -9,7 +10,7 @@ const limiter = rateLimit({
     message: "too much abusive request, wait 3 minutes",
 }); 
 
-router.post('/signup', userCtrl.signup); 
+router.post('/signup', validateBody(validators.userValidator), userCtrl.signup); 
 router.post('/login',  limiter, userCtrl.login); 
 
 

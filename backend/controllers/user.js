@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const MaskData = require('maskdata');
-const passwordValidator = require('password-validator');
+/*const passwordValidator = require('password-validator');*/
 
 const emailMask2Options = {
   maskWith: "*", 
@@ -12,7 +12,7 @@ const emailMask2Options = {
 };
 
 exports.signup = (req, res, next) => {
-  const schema = new passwordValidator();
+/*  const schema = new passwordValidator();
   schema
   .is().min(8)                                    // Minimum length 8
   .is().max(100)                                  // Maximum length 100
@@ -22,7 +22,7 @@ exports.signup = (req, res, next) => {
   .has().not().spaces()                           // Should not have spaces
   .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values  
 
-  if(schema.validate(req.body.password) == false ){ return res.status(400).json({error : 'Mot de passe invalide'}) ; }
+  if(schema.validate(req.body.password) == false ){ return res.status(400).json({error : 'Mot de passe invalide'}) ; }*/
 
   const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
   bcrypt.hash(req.body.password, 10)

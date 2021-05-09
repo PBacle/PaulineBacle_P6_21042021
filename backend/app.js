@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const path = require('path'); 
 
 const helmet = require("helmet");
+const session = require('cookie-session');
+const nocache = require('nocache');
 require('dotenv').config();
 
 const saucesRoutes = require('./routes/sauce');
@@ -26,7 +28,20 @@ app.use((req, res, next) => {
   next();
 });
 
+const expiryDate = new Date(Date.now() + 3600000); 
+app.use(session({
+  name: 'session',
+  secret: process.env.SECRET_SESSION,
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    domain: 'http://localhost:3000',
+    expires: expiryDate
+  }
+}));
+
 app.use(helmet());
+app.use(nocache());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
