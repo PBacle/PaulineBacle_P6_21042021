@@ -1,12 +1,34 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const MaskData = require('maskdata');
+const passwordValidator = require('password-validator');
+
+const emailMask2Options = {
+  maskWith: "*", 
+  unmaskedStartCharactersBeforeAt: 1,
+  unmaskedEndCharactersAfterAt: 1,
+  maskAtTheRate: false
+};
 
 exports.signup = (req, res, next) => {
+  const schema = new passwordValidator();
+  schema
+  .is().min(8)                                    // Minimum length 8
+  .is().max(100)                                  // Maximum length 100
+  .has().uppercase()                              // Must have uppercase letters
+  .has().lowercase()                              // Must have lowercase letters
+  .has().digits(2)                                // Must have at least 2 digits
+  .has().not().spaces()                           // Should not have spaces
+  .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values  
+
+  if(schema.validate(req.body.password) == false ){ return res.status(400).json({error : 'Mot de passe invalide'}) ; }
+
+  const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
-        email: req.body.email,
+        email: maskedEmail, 
         password: hash
       });
       user.save()
@@ -24,8 +46,9 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
   User.findOne({
-      email: req.body.email
+      email: maskedEmail
     })
     .then(user => {
       if (!user) {
@@ -46,7 +69,7 @@ exports.login = (req, res, next) => {
               {
                 userId: user._id
               }, 
-              'RANDOM_TOKEN_SECRET', 
+              process.env.TOKEN, 
               {
                 expiresIn: '24h'
               }

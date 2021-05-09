@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path'); 
 
+const helmet = require("helmet");
+require('dotenv').config();
+
 const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-/*mongoose.connect('mongodb+srv://OCP6:0p3ncl4ssr00ms@cluster0bcle.ak7el.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{*/
-mongoose.connect('mongodb+srv://PBcle:.M4.p4ul1n3.m0ng0db@cluster0bcle.ak7el.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{
+mongoose.connect(process.env.DB_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -23,6 +25,8 @@ app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', "default-src 'self'");
   next();
 });
+
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
