@@ -1,5 +1,5 @@
 const Sauce = require('../models/sauce');
-const fs = require('fs');
+const fs = require('fs'); /* 'file system' package used for download and storage of file, here images */
 
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -23,12 +23,12 @@ exports.createSauce = (req, res, next) => {
 
 exports.modifySauce = (req, res, next) => {
   let sauceObject = {};
-  req.file ? (
+  req.file ? ( /* first case : image file in modification request */
     Sauce.findOne({
       _id: req.params.id
     }).then((sauce) => {
       const filename = sauce.imageUrl.split('/images/')[1]
-      fs.unlinkSync(`images/${filename}`)
+      fs.unlinkSync(`images/${filename}`) /* deleting old image file */
     }),
     sauceObject = {
       ...JSON.parse(req.body.sauce),
@@ -36,7 +36,7 @@ exports.modifySauce = (req, res, next) => {
         req.file.filename
       }`,
     }
-  ) : (
+  ) : ( /* second case : image file is not modified */
     sauceObject = {
       ...req.body
     }
@@ -57,12 +57,14 @@ exports.modifySauce = (req, res, next) => {
     }))
 }
 
-exports.deleteSauce = (req, res, next) => {
-  Sauce.findOne({
+exports.deleteSauce = (req, res, next) => { 
+  /* before deleting sauce from db, image file should be deleted */
+  Sauce.findOne({ /* find the sauce based on id to get image url */
       _id: req.params.id
     })
     .then(sauce => {
       const filename = sauce.imageUrl.split('/images/')[1];
+      /* Delete the file with unlink method and then delete data */
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({
             _id: req.params.id
@@ -103,13 +105,15 @@ exports.likeDislike = (req, res, next) => {
   let userId = req.body.userId
   let sauceId = req.params.id
 
-  if (like === 1) { 
+  if (like === 1) {  /* user adds a like */
     Sauce.updateOne({
         _id: sauceId
       }, {
+        /* the user id is added to the array with push */
         $push: {
           usersLiked: userId
         },
+        /* nb of likes is increased of 1 */
         $inc: {
           likes: +1
         }, 
@@ -120,15 +124,17 @@ exports.likeDislike = (req, res, next) => {
       .catch((error) => res.status(400).json({
         error
       }))
-  }else if (like === -1) {
+  }else if (like === -1) { /* user adds a dislinke */
     Sauce.updateOne( 
         {
           _id: sauceId
         }, {
-          $push: {
+        /* the user id is added to the array with push */
+        $push: {
             usersDisliked: userId
           },
-          $inc: {
+        /* nb of dislikes is increased of 1 */
+        $inc: {
             dislikes: +1
           }, 
         }
@@ -141,19 +147,19 @@ exports.likeDislike = (req, res, next) => {
       .catch((error) => res.status(400).json({
         error
       }))
-  }else if (like === 0) {
+  }else if (like === 0) { /* user cancels a like or a dislike  */
     Sauce.findOne({
         _id: sauceId
       })
       .then((sauce) => {
-        if (sauce.usersLiked.includes(userId)) { 
+        if (sauce.usersLiked.includes(userId)) { /* cancelling a like */
           Sauce.updateOne({
               _id: sauceId
             }, {
-              $pull: {
+              $pull: { /* removed user id from the array */
                 usersLiked: userId
               },
-              $inc: {
+              $inc: { /* decreased nb of like */
                 likes: -1
               }, 
             })
@@ -163,14 +169,14 @@ exports.likeDislike = (req, res, next) => {
             .catch((error) => res.status(400).json({
               error
             }))
-        }else if (sauce.usersDisliked.includes(userId)) { 
+        }else if (sauce.usersDisliked.includes(userId)) {  /* cancelling a dislike */
           Sauce.updateOne({
               _id: sauceId
             }, {
-              $pull: {
+              $pull: {  /* removed user id from the array */
                 usersDisliked: userId
               },
-              $inc: {
+              $inc: { /* decreased nb of dislike */
                 dislikes: -1
               }, 
             })
