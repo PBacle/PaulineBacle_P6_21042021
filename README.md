@@ -37,5 +37,4 @@ Si les packages sont déja installés, il suffit d'utiliser les commandes suivan
 ### 🖥 &nbsp; Connexion
 
 * Une fois les deux serveurs allumés, l'application est disponible en ouvrant l'url suivante dans le navigateur : `http://localhost:4200`
-* Pour s'inscrire, l'utilisateur doit fournir un email et un mot de passe contenant ..... .
-
+* Pour s'inscrire, l'utilisateur doit fournir un email et un mot de passe contenant d'au moins 8 caractères dont des majuscules, des minuscules et au moins 2 chiffres.
